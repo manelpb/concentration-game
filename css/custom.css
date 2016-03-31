@@ -1,0 +1,118 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+
+body > .container {
+  padding: 60px 15px 0;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.scoreboard {
+    position: absolute;
+    top: 15px;
+    right: 0;
+}
+
+.scoreboard .item {
+    margin-right: 50px;
+}
+
+.scoreboard .item span {
+    font-weight: bold;
+}
+
+.game-board .rows {
+    margin-bottom: 20px; 
+    text-align: center;
+    position: relative;
+}
+
+.game-board .rows .overlay {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.94);
+    position: absolute;
+    z-index: 99;
+    padding-top: 50px;
+    display: none;
+}
+
+.game-board .rows .overlay h2 {
+    color: #279E57;
+}
+
+.game-board .rows .overlay h3 {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.game-board .rows .overlay table {
+    width: 100px;
+    margin: 0 auto;
+}
+
+.game-board .item {
+    margin: 5px;
+    border: 1px solid #e0e0e0;
+    min-height: 200px;
+    display:inline-block;
+    float:none;
+}
+
+.game-board .item:hover {
+    cursor: pointer;
+}
+
+.game-board .item.hided {
+    background: #9BA4C5 url(../images/icon-help.png) no-repeat center center;
+}
+
+.game-board .item-0 {    
+    background: url(../images/house.png) no-repeat center center;
+}
+
+.game-board .item-1 {    
+    background: url(../images/cup.png) no-repeat center center;
+}
+
+.game-board .item-2 {    
+    background: url(../images/facebook.png) no-repeat center center;
+}
+
+.game-board .item-3 {    
+    background: url(../images/twitter.png) no-repeat center center;
+}
+
+.game-board .item-4 {    
+    background: url(../images/google.png) no-repeat center center;
+}
+
+#btnStartOver {
+    margin-top: -40px;
+}

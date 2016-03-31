@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="./images/favicon.ico">
+
+        <title>Concentration</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <link href="./css/custom.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+
+        <!-- Fixed navbar -->
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Concentration Game</a>
+                </div>
+
+                <div class="scoreboard">
+                    <div class="pull-left attemps item">
+                        Attemps: <span>0</span>
+                    </div>
+
+                    <div class="pull-left matches item">
+                        Matches: <span>0</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="container game-board">
+            <div class="page-header">
+                <h1>Let's play Concentration</h1>
+
+                <button id="btnStartOver" class="pull-right btn btn-primary">Start over</button>
+            </div>
+
+            <div class="rows">
+                <div class="overlay center-block">
+                    <h2>You Won!</h2>
+
+                    <h3>Your final scores are: </h3>
+
+                    <table class="table table-condensed">
+                        <tr>
+                            <th>Attemps</th>
+                            <th>Matches</th>
+                        </tr>
+                        <tr>
+                            <td class="attemps"><span></span></td>
+                            <td class="matches"><span></span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="cards"></div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <p class="text-muted">
+                    &copy; Emmanuel Alves Nobrega dos Santos - 7387947 - 
+                    Conestoga College - Assignment 3 - PROG8185
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="./js/game.js"></script>
+    </body>
+</html>

@@ -1,10 +1,10 @@
 var ScoreBoard = {
     Attemps: 0,
-    Matches: 0,
+    Timer: 0,
     
     reset : function() {
         this.Attemps = 0;
-        this.Matches = 0;
+        this.Timer = 0;
         
         this.updateScoreBoard();
     },
@@ -14,23 +14,25 @@ var ScoreBoard = {
         this.updateScoreBoard();
     },
     
-    updateMatches: function() {
-        this.Matches++;
+    updateTimer: function() {
+        this.Timer++;
         this.updateScoreBoard();
     },
     
     updateScoreBoard : function() {
+        $(".scoreboard .timer span").html(this.Timer);
         $(".scoreboard .attemps span").html(this.Attemps);
-        $(".scoreboard .matches span").html(this.Matches);
         
-        $(".overlay .attemps span").html(this.Attemps);
-        $(".overlay .matches span").html(this.Matches);
-    }   
+        $(".final-scoreboard .timer span").html(this.Timer);
+        $(".final-scoreboard .attemps span").html(this.Attemps);
+    }
 };
 
 var Game = function() {   
     this.self = this;
     
+    this.timer = null;
+    this.timerNum = 0;
     this.qntCards = 10;
     this.boardContainer = null;
     this.cards = [];
@@ -49,18 +51,19 @@ var Game = function() {
         return a;
     };
     
-    this.BindEvents = function() {
-        $("#btnStartOver").click(jQuery.proxy(function(event) {
-            // reset everything
-            ScoreBoard.reset();
-            
-            // creates a new board
-            this.CreateCards();
-            this.CreateBoard();
-            
-            // hides the overlay
-            $(".overlay").hide();
-        }, this));
+    this.StarOver = function() {        
+        // reset everything
+        ScoreBoard.reset();
+
+        // creates a new board
+        this.CreateCards();
+        this.CreateBoard();
+
+        // hides the overlay
+        $(".final-scoreboard").hide();
+        
+        // reset the timer
+        this.timer = null;
     };
     
     this.FlipCard = function(cardNum, on) {
@@ -76,6 +79,10 @@ var Game = function() {
             $("#card_" + cardNum).removeClass("item-" + this.cards[cardNum]);
             $("#card_" + cardNum).removeClass("openned");            
         }
+    };
+    
+    this.Won = function() {
+        return ($(this.boardContainer).find(".openned").length == this.cards.length);
     };
     
     this.CreateCards = function() {
@@ -94,15 +101,13 @@ var Game = function() {
     this.CompareCards = function() {
         if(this.cards[this.firstFlippedCard] == this.cards[this.secondFlippedCard]) {
             // keep cards openned
-            console.log("match");
+            //console.log("match");
             
             $("#card_" + this.firstFlippedCard).addClass("openned");
             $("#card_" + this.secondFlippedCard).addClass("openned");
-            
-            ScoreBoard.updateMatches();
         } else {
             // flip back
-            console.log("not match");
+            //console.log("not match");
             
             this.FlipCard(this.firstFlippedCard, false);
             this.FlipCard(this.secondFlippedCard, false);
@@ -115,52 +120,82 @@ var Game = function() {
         this.secondFlippedCard = -1;
         
         // checks if the game is over
-        if(ScoreBoard.Matches == (this.cards.length/2)) {
-            $(".overlay").show();
+        if(this.Won()) {
+            // stops the timer
+            clearInterval(this.timer);
+            
+            // shows the final scoreboard
+            $(".final-scoreboard").show();
+        }
+    };
+    
+    this.PlayTurn = function(elemn) {
+        var self = this;
+        
+        var cardId = elemn.attr("id");        
+        var cardIdNum = parseInt(cardId.split("_")[1]);
+
+        if(!elemn.hasClass("openned")) {
+            if(this.firstFlippedCard == -1) {
+                this.firstFlippedCard = cardIdNum;
+                this.FlipCard(this.firstFlippedCard, true);
+
+                // start the timer on the first move
+                if(!this.timer) {
+                    this.timer = setInterval(function() {
+                        ScoreBoard.updateTimer();
+                    }, 1000);
+                }
+            } else if (this.secondFlippedCard == -1) {
+                this.secondFlippedCard = cardIdNum;
+                this.FlipCard(this.secondFlippedCard, true);
+            }
+
+            if(this.firstFlippedCard != -1 && this.secondFlippedCard != -1) {
+                // compare if they match
+                setTimeout(function() {
+                    self.CompareCards();
+                }, 500);
+            }
         }
     };
     
     this.CreateBoard = function() {
         var self = this;
         
+        // empty the timer
+        if(this.timer) {
+            clearInterval(this.timer);
+        }
+        
         // clean the board
         $(this.boardContainer).empty();
         
         for(var i = 0; i < this.qntCards; i++) {
-            $(this.boardContainer).append("<div class='col-xs-2 col-md-2 item hided' id='card_"+ i +"'></div>");            
+            $(this.boardContainer).append("<div class='col-xs-4 col-sm-3 col-md-2 item hided' id='card_"+ i +"'></div>");            
             
             $(this.boardContainer + " #card_" + i).click(jQuery.proxy(function(event) {
-                var cardId = event.target.id;
-                var cardIdNum = parseInt(cardId.split("_")[1]);
-                
-                if(!$(event.target).hasClass("openned")) {
-                    if(this.firstFlippedCard == -1) {
-                        this.firstFlippedCard = cardIdNum;
-                        this.FlipCard(this.firstFlippedCard, true);
-                    } else if (this.secondFlippedCard == -1) {
-                        this.secondFlippedCard = cardIdNum;
-                        this.FlipCard(this.secondFlippedCard, true);
-                    }
-
-                    if(this.firstFlippedCard != -1 && this.secondFlippedCard != -1) {
-                        // compare if they match
-                        setTimeout(function() {
-                            self.CompareCards();
-                        }, 500);
-                    }
-                }
+                this.PlayTurn($(event.target));
             }, this));
-        }        
+        };
     };
     
-    this.Init = function(bc) {
+    this.BindExtraEvents = function() {
+        $("#btnStartOver").click(jQuery.proxy(function(event) {
+            this.StarOver();
+        }, this));
+    };
+    
+    this.Init = function(bc) {        
         this.boardContainer = bc;   
-        
-        this.BindEvents();
+
         this.CreateCards();
         this.CreateBoard();
+        this.BindExtraEvents();       
     };
 }
 
-// init the game
-new Game().Init(".game-board .rows .cards");
+$(document).ready(function() {
+    // init the game
+    new Game().Init(".game-board .rows .cards");
+});
